@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Лицей</title>
+<meta name="description" content="Искусство, музыка и литература с нуля: эпохи, произведения, викторины.">
+<meta name="theme-color" content="#f5efe3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%237a2633'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='40' text-anchor='middle' fill='%23f3e6c4'%3EЛ%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#f5efe3; --card:#fbf8f1; --ink:#2b2420; --muted:#6f6357; --line:#d9cdb6;
+  --accent:#7a2633; --accent-ink:#fff8ec; --gold:#a8834a; --ok:#2f6b45; --bad:#a3352f;
+  --shadow:0 1px 2px rgba(60,40,20,.08),0 6px 20px rgba(60,40,20,.07);
+  --serif:"Lora",Georgia,"Times New Roman",serif; --display:"Cormorant Garamond",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1b1716; --card:#25201e; --ink:#eee5d6; --muted:#b0a392; --line:#3f3632;
+  --accent:#d0808b; --accent-ink:#1b1716; --gold:#c9a66b; --ok:#7cc79a; --bad:#e58a83;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{
+  --paper:#1b1716; --card:#25201e; --ink:#eee5d6; --muted:#b0a392; --line:#3f3632;
+  --accent:#d0808b; --accent-ink:#1b1716; --gold:#c9a66b; --ok:#7cc79a; --bad:#e58a83;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--accent)}
+img{max-width:100%;display:block}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+header.top{padding:22px 0 8px;text-align:center;position:relative}
+.brand{font-family:var(--display);font-weight:700;font-size:44px;letter-spacing:.06em;line-height:1;margin:0}
+.brand-sub{font-family:var(--display);font-style:italic;color:var(--muted);font-size:19px;margin-top:4px}
+.orn{display:flex;align-items:center;gap:12px;justify-content:center;color:var(--gold);margin:10px auto 0;max-width:280px}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.icon-btn{position:absolute;top:22px;background:none;border:1px solid var(--line);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;color:var(--muted)}
+.icon-btn svg{width:18px;height:18px}
+#aboutBtn{right:0} #themeBtn{left:0}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;max-width:220px;background:none;border:0;padding:10px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-family:var(--display);font-size:17px;font-weight:600;letter-spacing:.03em}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-selected="true"]{color:var(--accent)}
+nav.tabs button[aria-selected="true"]::after{content:"";width:28px;height:2px;background:var(--accent);border-radius:2px}
+h2.sec{font-family:var(--display);font-size:30px;font-weight:700;margin:26px 0 4px}
+.lead{color:var(--muted);margin:0 0 18px}
+.progress-line{display:flex;align-items:center;gap:12px;margin:8px 0 18px;color:var(--muted);font-size:15px}
+.bar{flex:1;height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:6px;transition:width .4s}
+.chapters{display:grid;gap:12px}
+.chap{display:flex;gap:16px;align-items:center;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);width:100%}
+.chap:hover{border-color:var(--gold)}
+.roman{font-family:var(--display);font-weight:700;font-size:26px;color:var(--accent);min-width:46px;text-align:center;border-right:1px solid var(--line);padding-right:12px}
+.chap .t{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.15}
+.chap .p{color:var(--muted);font-size:14px}
+.chap .st{margin-left:auto;font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.chap .st b{display:block;color:var(--ok);font-size:15px}
+.exam{margin-top:16px;width:100%;border:1px dashed var(--gold);background:none;border-radius:14px;padding:14px 16px;text-align:left;display:flex;gap:14px;align-items:center}
+.exam .t{font-family:var(--display);font-weight:700;font-size:21px}
+.exam .p{color:var(--muted);font-size:14px}
+.back{background:none;border:0;color:var(--accent);padding:16px 0 0;display:inline-flex;align-items:center;gap:6px;font-size:15px}
+.ch-head{text-align:center;margin:8px 0 18px}
+.ch-head .period{color:var(--gold);font-family:var(--display);font-style:italic;font-size:19px}
+.ch-head h1{font-family:var(--display);font-size:38px;line-height:1.1;margin:4px 0 0}
+.prose p{margin:0 0 14px;hyphens:auto}
+@media (min-width:600px){.prose p{text-align:justify}}
+.rnav{display:flex;justify-content:space-between;gap:10px;margin:30px 0 10px;flex-wrap:wrap}
+.prose p:first-child::first-letter{font-family:var(--display);float:left;font-size:58px;line-height:.85;padding:6px 8px 0 0;color:var(--accent);font-weight:700}
+.traits{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:20px 0}
+.traits h3,.block-title{font-family:var(--display);font-size:24px;margin:0 0 8px}
+.traits ul{margin:0;padding-left:20px}
+.traits li{margin:4px 0}
+.block-title{margin:26px 0 12px;display:flex;align-items:center;gap:12px}
+.block-title::after{content:"";flex:1;height:1px;background:var(--line)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.art{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-align:left;padding:0;box-shadow:var(--shadow)}
+.art .frame{aspect-ratio:4/3;background:#2a2422;overflow:hidden}
+.art img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.art:hover img{transform:scale(1.04)}
+.art .cap{padding:10px 12px 12px}
+.art .cap b{font-family:var(--display);font-size:19px;display:block;line-height:1.15}
+.art .cap span{color:var(--muted);font-size:14px}
+.tracks{display:grid;gap:10px}
+.track{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+.track .row{display:flex;gap:12px;align-items:center}
+.play{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.play svg{width:20px;height:20px}
+.track .meta b{font-family:var(--display);font-size:20px;display:block;line-height:1.15}
+.track .meta span{color:var(--muted);font-size:14px}
+.track .desc{font-size:15px;margin:8px 0 0;color:var(--ink)}
+.seek{height:4px;background:var(--line);border-radius:4px;margin-top:10px;overflow:hidden;cursor:pointer}
+.seek i{display:block;height:100%;width:0;background:var(--gold)}
+.credit{font-size:12px;color:var(--muted);margin-top:6px}
+.credit a{color:var(--muted)}
+.books{display:grid;gap:14px}
+.book{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);display:grid;grid-template-columns:72px 1fr;gap:14px}
+.book .por{width:72px;height:92px;border-radius:8px;overflow:hidden;background:var(--line);display:grid;place-items:center;font-family:var(--display);font-size:34px;color:var(--muted)}
+.book .por img{width:100%;height:100%;object-fit:cover;object-position:top}
+.book b{font-family:var(--display);font-size:22px;line-height:1.15;display:block}
+.book .au{color:var(--muted);font-size:14px}
+.book blockquote{margin:10px 0;padding:6px 0 6px 14px;border-left:2px solid var(--gold);font-style:italic;white-space:pre-line}
+.book p{margin:6px 0 10px;font-size:15px}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:9px 18px;font-size:15px;display:inline-flex;align-items:center;gap:8px}
+.btn.ghost{background:none;color:var(--accent)}
+.btn.big{padding:13px 26px;font-size:17px}
+.center{text-align:center}
+.quiz-call{margin:32px 0 10px;padding:22px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:center}
+.quiz-call h3{font-family:var(--display);font-size:26px;margin:0 0 4px}
+.quiz-call p{color:var(--muted);margin:0 0 14px}
+/* quiz */
+.qwrap{max-width:640px;margin:0 auto}
+.qtop{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;margin:14px 0 6px}
+.qtitle{font-family:var(--display);font-size:27px;line-height:1.2;margin:10px 0 14px}
+.qmedia{margin:0 0 14px;border-radius:12px;overflow:hidden;background:#2a2422}
+.qmedia img{width:100%;max-height:52vh;object-fit:contain}
+.qquote{background:var(--card);border-left:3px solid var(--gold);padding:12px 16px;font-style:italic;white-space:pre-line;border-radius:0 10px 10px 0;margin-bottom:14px}
+.qaudio{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:16px}
+.opt:hover:not(:disabled){border-color:var(--gold)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.opt:disabled{cursor:default}
+.expl{margin:14px 0;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:15px}
+.expl b{font-family:var(--display);font-size:19px}
+.result{text-align:center;padding:30px 0}
+.result .score{font-family:var(--display);font-size:72px;color:var(--accent);line-height:1}
+.result h2{font-family:var(--display);font-size:30px;margin:8px 0}
+/* overlays */
+.ov{position:fixed;inset:0;z-index:50;background:var(--paper);overflow:auto;display:none}
+.ov.open{display:block}
+.ov-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:10px 16px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.ov-bar .ttl{flex:1;font-family:var(--display);font-weight:700;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov-bar button{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:14px;color:var(--ink)}
+#lightbox{background:#141110;color:#eee5d6}
+#lightbox .ov-bar{background:rgba(20,17,16,.9);border-color:#3f3632}
+#lightbox .ov-bar button{color:#eee5d6;border-color:#3f3632}
+.lb-img{display:flex;justify-content:center;padding:12px}
+.lb-img img{max-height:72vh;width:auto;object-fit:contain;border-radius:4px}
+.lb-text{max-width:720px;margin:0 auto;padding:0 16px 40px}
+.lb-text h2{font-family:var(--display);font-size:32px;margin:6px 0 0;line-height:1.1}
+.lb-text .au{color:#c9a66b;font-family:var(--display);font-style:italic;font-size:20px}
+.lb-text .credit a,.lb-text .credit{color:#9f9384}
+.reader{max-width:720px;margin:0 auto;padding:10px 16px 60px;font-size:var(--rfs,18px);line-height:1.75}
+.reader .poem,.reader .poem p{white-space:normal}
+.reader table{max-width:100%;font-size:.85em}
+.reader img{display:inline;max-width:100%;height:auto}
+.reader .mw-editsection,.reader .ws-noexport,.reader #textquality,.reader .noprint{display:none!important}
+.reader #headertemplate{font-size:.85em;color:var(--muted);border-bottom:1px solid var(--line);margin-bottom:16px;padding-bottom:8px}
+.reader #headertemplate table{width:100%}
+.reader h1,.reader h2,.reader h3{font-family:var(--display)}
+.reader a.new{color:var(--muted);text-decoration:none;pointer-events:none}
+.reader .note{color:var(--muted);text-align:center;padding:40px 0}
+.about{max-width:680px;margin:0 auto;padding:10px 16px 50px}
+.about h2{font-family:var(--display);font-size:28px;margin:18px 0 6px}
+@media (min-width:760px){
+  .brand{font-size:56px}
+  nav.tabs{top:0;bottom:auto;position:sticky;border-top:0;border-bottom:1px solid var(--line)}
+  nav.tabs button{flex-direction:row;justify-content:center;padding:12px 10px;font-size:19px}
+  nav.tabs button[aria-selected="true"]::after{display:none}
+  nav.tabs button[aria-selected="true"]{box-shadow:inset 0 -2px 0 var(--accent)}
+  body{padding-bottom:30px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <button class="icon-btn" id="themeBtn" aria-label="Сменить тему"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    <p class="brand">ЛИЦЕЙ</p>
+    <div class="brand-sub">искусство · музыка · литература</div>
+    <div class="orn">❦</div>
+    <button class="icon-btn" id="aboutBtn" aria-label="О приложении"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg></button>
+  </header>
+</div>
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>Искусство</button>
+  <button role="tab" data-tab="music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>Музыка</button>
+  <button role="tab" data-tab="lit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg>Литература</button>
+</nav>
+<main class="wrap" id="app"></main>
+
+<div class="ov" id="lightbox"><div class="ov-bar"><div class="ttl" id="lbTitle"></div><button data-close>Закрыть ✕</button></div><div class="lb-img"><img id="lbImg" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></div><div class="lb-text" id="lbText"></div></div>
+<div class="ov" id="readerOv"><div class="ov-bar"><button id="rBack">←</button><div class="ttl" id="rTitle"></div><button id="rSmaller">A−</button><button id="rBigger">A+</button><button data-close>✕</button></div><article class="reader" id="reader"></article></div>
+<div class="ov" id="aboutOv"><div class="ov-bar"><div class="ttl">О «Лицее»</div><button data-close>✕</button></div><div class="about">
+  <h2>Как заниматься</h2>
+  <p>В каждой вкладке главы идут по порядку — от азов и древности к XX веку. Прочитайте вступление, посмотрите или послушайте произведения, а потом пройдите проверку. Лучший результат сохраняется. «Экзамен на узнавание» в конце вкладки перемешивает произведения из всех глав: так вы учитесь отличать эпохи и авторов.</p>
+  <h2>Откуда картины, музыка и книги</h2>
+  <p>Изображения и записи загружаются из <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>, тексты — из <a href="https://ru.wikisource.org" target="_blank" rel="noopener">Викитеки</a>. Под каждым произведением указаны лицензия и ссылка на источник. Нужен интернет.</p>
+  <h2>Про авторское право</h2>
+  <p>В России, Бразилии и большинстве стран Европы права действуют всю жизнь автора и ещё <b>70 лет</b> после его смерти (а не 40). Поэтому античность, Шекспир, Пушкин, Толстой, Чехов и Блок — общественное достояние. Важная деталь: у перевода свой автор, и перевод тоже охраняется 70 лет после смерти переводчика. Поэтому здесь используются старые переводы (Гнедич, Жуковский, Кронеберг и другие). Ахматова, Пастернак, Булгаков, Пикассо и Дали пока под охраной.</p>
+  <p class="credit">Прогресс хранится только на этом устройстве.</p>
+  <p><button class="btn ghost" id="resetBtn">Сбросить прогресс</button></p>
+</div></div>
+<audio id="player" preload="none"></audio>
+
+<script src="data.js"></script>
+<script>
+(() => {
+const D = window.LICEY_DATA;
+const TABS = {
+  art:{name:'Искусство',lead:'От пещерных быков до «Чёрного квадрата»: эпохи, стили и главные шедевры.'},
+  music:{name:'Музыка',lead:'От григорианского хорала до джаза: слушайте, сравнивайте, узнавайте на слух.'},
+  lit:{name:'Литература',lead:'От Гомера до Серебряного века: эпохи, авторы — и сами книги, прямо здесь.'}
+};
+const ROMAN = ['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+const $ = (s, r=document) => r.querySelector(s);
+const app = $('#app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = (a,n) => shuffle(a).slice(0,n);
+const surname = a => a.replace(/\s*\(.*\)/,'');
+
+// ---------- storage ----------
+const KEY='licey.v1';
+let S = {scores:{}, theme:null, rfs:18, tab:'art'};
+try { Object.assign(S, JSON.parse(localStorage.getItem(KEY)||'{}')); } catch(e){}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+
+// ---------- theme ----------
+const applyTheme = () => { if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme; };
+applyTheme();
+$('#themeBtn').onclick = () => {
+  const dark = S.theme ? S.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  S.theme = dark ? 'light' : 'dark'; applyTheme(); save();
+};
+
+// ---------- audio ----------
+const player = $('#player');
+let playing = null; // {key, btn, seek}
+const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+function stopAudio(){ player.pause(); if (playing){ playing.btn.innerHTML = ICON_PLAY; } playing=null; }
+function toggleAudio(audio, btn, seek){
+  if (playing && playing.btn===btn){ if (player.paused){ player.play(); btn.innerHTML=ICON_PAUSE; } else { player.pause(); btn.innerHTML=ICON_PLAY; } return; }
+  stopAudio();
+  player.src = audio.src;
+  player.onerror = () => { if (player.src !== audio.alt && audio.alt){ player.src = audio.alt; player.play().catch(()=>{}); } };
+  player.play().catch(()=>{});
+  btn.innerHTML = ICON_PAUSE;
+  playing = {btn, seek};
+}
+player.ontimeupdate = () => { if (playing && playing.seek && player.duration) playing.seek.firstChild.style.width = (player.currentTime/player.duration*100)+'%'; };
+player.onended = () => { if (playing) playing.btn.innerHTML = ICON_PLAY; };
+function seekClick(e, seek){ if (!playing || playing.seek!==seek || !player.duration) return; const r=seek.getBoundingClientRect(); player.currentTime = (e.clientX-r.left)/r.width*player.duration; }
+
+const credit = m => m ? `<div class="credit">Источник: <a href="${esc(m.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>${m.lic?' · '+esc(m.lic):''}${m.by && m.by.length<60 ? ' · '+esc(m.by):''}</div>` : '';
+
+// ---------- overlays ----------
+document.querySelectorAll('.ov [data-close]').forEach(b => b.onclick = () => closeOv(b.closest('.ov')));
+function openOv(el){ el.classList.add('open'); el.scrollTop=0; document.body.style.overflow='hidden'; history.pushState({ov:el.id}, ''); }
+function closeOv(el, fromPop){ if (!el.classList.contains('open')) return; el.classList.remove('open'); document.body.style.overflow=''; if (!fromPop) history.back(); if (el.id==='readerOv' && view.name==='chapter'){ const y=scrollY; render(); scrollTo(0,y); } }
+window.addEventListener('popstate', () => { document.querySelectorAll('.ov.open').forEach(o => closeOv(o, true)); });
+$('#aboutBtn').onclick = () => openOv($('#aboutOv'));
+$('#resetBtn').onclick = () => { if (confirm('Стереть все результаты проверок?')) { S.scores={}; save(); closeOv($('#aboutOv')); render(); } };
+
+function showArt(w){
+  $('#lbTitle').textContent = w.t;
+  $('#lbImg').src = w.img.src; $('#lbImg').alt = w.t;
+  $('#lbText').innerHTML = `<h2>${esc(w.t)}</h2><div class="au">${esc(w.a)}, ${esc(w.y)}</div><p>${esc(w.d)}</p>${credit(w.img)}`;
+  openOv($('#lightbox'));
+}
+
+// ---------- reader ----------
+const WS = 'https://ru.wikisource.org';
+let rStack = [];
+const reader = $('#reader');
+function setRfs(){ reader.style.setProperty('--rfs', S.rfs+'px'); }
+$('#rSmaller').onclick = () => { S.rfs = Math.max(14, S.rfs-1); setRfs(); save(); };
+$('#rBigger').onclick = () => { S.rfs = Math.min(28, S.rfs+1); setRfs(); save(); };
+$('#rBack').onclick = () => { if (rStack.length>1){ rStack.pop(); loadPage(rStack.pop()); } else closeOv($('#readerOv')); };
+let rRoot = null;
+function openReader(title, resume){ rStack=[]; rRoot=title; setRfs(); openOv($('#readerOv')); loadPage(resume || title); }
+const titleFromHref = h => { const m=(h||'').match(/^\/wiki\/([^#?]+)/); return m ? decodeURIComponent(m[1]).replace(/_/g,' ') : null; };
+async function loadPage(title){
+  rStack.push(title);
+  $('#rTitle').textContent = title.replace(/\s*\(.*?\)\s*/g,' ').replace(/\/ДО$/,'').replace(/\s*\//g,' · ').trim();
+  reader.innerHTML = '<p class="note">Загружаю текст…</p>';
+  $('#readerOv').scrollTop = 0;
+  try {
+    const u = `${WS}/w/api.php?action=parse&format=json&origin=*&redirects=1&disableeditsection=1&prop=text|displaytitle&page=${encodeURIComponent(title)}`;
+    const r = await fetch(u); const j = await r.json();
+    if (!j.parse) throw new Error('нет страницы');
+    const doc = new DOMParser().parseFromString(j.parse.text['*'], 'text/html');
+    const prev = titleFromHref(doc.querySelector('#headerprevious a')?.getAttribute('href'));
+    const next = titleFromHref(doc.querySelector('#headernext a')?.getAttribute('href'));
+    doc.querySelectorAll('script,style,link,meta,.mw-editsection,.ws-noexport,.noprint,.mw-empty-elt').forEach(n => n.remove());
+    doc.querySelectorAll('img').forEach(i => { const s=i.getAttribute('src'); if (s && s.startsWith('//')) i.src='https:'+s; i.removeAttribute('srcset'); });
+    const nav = (prev||next||title!==rRoot) ? `<div class="rnav">${prev?`<button class="btn ghost" data-go="${esc(prev)}">← Назад</button>`:'<span></span>'}${title!==rRoot?`<button class="btn ghost" data-go="${esc(rRoot)}">Оглавление</button>`:''}${next?`<button class="btn" data-go="${esc(next)}">Дальше →</button>`:''}</div>` : '';
+    if (title!==rRoot){ S.last = S.last||{}; S.last[rRoot]=title; save(); }
+    reader.innerHTML = nav + doc.body.innerHTML + nav + `<p class="credit" style="margin-top:30px">Текст: <a href="${WS}/wiki/${encodeURIComponent(title)}" target="_blank" rel="noopener">Викитека</a>, общественное достояние.</p>`;
+  } catch(e){
+    reader.innerHTML = `<p class="note">Не удалось загрузить текст. Проверьте интернет.<br><br><a href="${WS}/wiki/${encodeURIComponent(title)}" target="_blank" rel="noopener">Открыть в Викитеке</a></p>`;
+  }
+}
+reader.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (g){ loadPage(g.dataset.go); return; }
+  const a = e.target.closest('a'); if (!a) return;
+  const href = a.getAttribute('href') || '';
+  if (href.startsWith('#')) return;
+  e.preventDefault();
+  if (a.classList.contains('new')) return;
+  const m = href.match(/^\/wiki\/([^#?]+)/);
+  if (m){
+    const t = decodeURIComponent(m[1]).replace(/_/g,' ');
+    if (/^(Служебная|Special|Категория|Обсуждение|Файл|Википедия|Викитека|Портал|Шаблон|Справка):/.test(t)) { window.open(WS+href,'_blank','noopener'); return; }
+    loadPage(t); return;
+  }
+  const abs = href.startsWith('//') ? 'https:'+href : href.startsWith('/') ? WS+href : href;
+  window.open(abs, '_blank', 'noopener');
+});
+
+// ---------- views ----------
+let view = {name:'tab', tab:S.tab};
+function go(v){ stopAudio(); view = v; if (v.tab){ S.tab=v.tab; save(); } render(); window.scrollTo(0,0); }
+document.querySelectorAll('nav.tabs button').forEach(b => b.onclick = () => go({name:'tab', tab:b.dataset.tab}));
+
+function render(){
+  document.querySelectorAll('nav.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab===view.tab));
+  if (view.name==='tab') renderTab(view.tab);
+  else if (view.name==='chapter') renderChapter(view.tab, view.idx);
+  else if (view.name==='quiz') renderQuiz();
+}
+
+function renderTab(tab){
+  const chs = D[tab];
+  const done = chs.filter(c => S.scores[c.id]!=null).length;
+  app.innerHTML = `
+    <h2 class="sec">${TABS[tab].name}</h2>
+    <p class="lead">${TABS[tab].lead}</p>
+    <div class="progress-line"><div class="bar"><i style="width:${done/chs.length*100}%"></i></div>${done} из ${chs.length} глав</div>
+    <div class="chapters">${chs.map((c,i)=>{
+      const sc = S.scores[c.id];
+      return `<button class="chap" data-i="${i}"><div class="roman">${i===0?'✦':ROMAN[i]}</div><div><div class="t">${esc(c.title)}</div><div class="p">${esc(c.period)}</div></div><div class="st">${sc!=null?`<b>${sc}%</b>пройдено`:''}</div></button>`;
+    }).join('')}</div>
+    <button class="exam" id="examBtn"><div class="roman" style="border:0">✧</div><div><div class="t">Экзамен на узнавание</div><div class="p">${tab==='lit'?'Угадайте произведение по цитате и автора по книге':tab==='music'?'Слушайте отрывки и угадывайте эпоху и композитора':'Смотрите на картину и угадывайте эпоху и автора'} — из всех глав</div></div>${S.scores['exam-'+tab]!=null?`<div class="st"><b>${S.scores['exam-'+tab]}%</b>лучший</div>`:''}</button>`;
+  app.querySelectorAll('.chap').forEach(b => b.onclick = () => go({name:'chapter', tab, idx:+b.dataset.i}));
+  $('#examBtn').onclick = () => startQuiz(tab, null);
+}
+
+function renderChapter(tab, idx){
+  const c = D[tab][idx];
+  let works = '';
+  if (tab==='art'){
+    works = `<div class="gallery">${c.works.map((w,i)=>`<button class="art" data-w="${i}"><div class="frame"><img loading="lazy" src="${esc(w.img.src)}" alt="${esc(w.t)}"></div><div class="cap"><b>${esc(w.t)}</b><span>${esc(w.a)}, ${esc(w.y)}</span></div></button>`).join('')}</div>`;
+  } else if (tab==='music'){
+    works = `<div class="tracks">${c.works.map((w,i)=>`<div class="track"><div class="row"><button class="play" data-w="${i}" aria-label="Слушать">${ICON_PLAY}</button><div class="meta"><b>${esc(w.t)}</b><span>${esc(w.a)}, ${esc(w.y)}</span></div></div><div class="seek" data-s="${i}"><i></i></div><p class="desc">${esc(w.d)}</p>${credit(w.audio)}</div>`).join('')}</div>`;
+  } else {
+    works = `<div class="books">${c.works.map((w,i)=>`<div class="book"><div class="por">${w.img?`<img loading="lazy" src="${esc(w.img.src)}" alt="${esc(w.a)}">`:esc(w.a.trim()[0])}</div><div><b>${esc(w.t)}</b><div class="au">${esc(w.a)}, ${esc(w.y)}</div>${w.q?`<blockquote>${esc(w.q)}</blockquote>`:''}<p>${esc(w.d)}</p>${w.ws?`<button class="btn" data-r="${i}">📖 Читать</button>${S.last&&S.last[w.ws]?` <button class="btn ghost" data-c="${i}">Продолжить</button>`:''}`:''}</div></div>`).join('')}</div>`;
+  }
+  const sc = S.scores[c.id];
+  const next = D[tab][idx+1];
+  app.innerHTML = `
+    <button class="back" id="backBtn">← ${TABS[tab].name}</button>
+    <div class="ch-head"><div class="period">${idx===0?'Азбука':'Глава '+ROMAN[idx]} · ${esc(c.period)}</div><h1>${esc(c.title)}</h1></div>
+    <div class="prose">${c.intro.map(p=>`<p>${esc(p)}</p>`).join('')}</div>
+    <div class="traits"><h3>Как узнать</h3><ul>${c.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+    <h3 class="block-title">${tab==='art'?'Произведения':tab==='music'?'Слушаем':'Читаем'}</h3>
+    ${works}
+    <div class="quiz-call"><h3>Проверьте себя</h3><p>${sc!=null?`Ваш лучший результат: ${sc}%. Можно пройти ещё раз — вопросы перемешиваются.`:'Несколько вопросов по главе — и знания закрепятся.'}</p><button class="btn big" id="quizBtn">Начать проверку</button></div>
+    ${next?`<p class="center"><button class="btn ghost" id="nextBtn">Следующая глава: ${esc(next.title)} →</button></p>`:''}`;
+  $('#backBtn').onclick = () => go({name:'tab', tab});
+  $('#quizBtn').onclick = () => startQuiz(tab, idx);
+  if (next) $('#nextBtn').onclick = () => go({name:'chapter', tab, idx:idx+1});
+  app.querySelectorAll('.art').forEach(b => b.onclick = () => showArt(c.works[+b.dataset.w]));
+  app.querySelectorAll('.play').forEach(b => { const i=+b.dataset.w; const seek=app.querySelector(`.seek[data-s="${i}"]`); b.onclick = () => toggleAudio(c.works[i].audio, b, seek); seek.onclick = e => seekClick(e, seek); });
+  app.querySelectorAll('[data-r]').forEach(b => b.onclick = () => openReader(c.works[+b.dataset.r].ws));
+  app.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { const ws=c.works[+b.dataset.c].ws; openReader(ws, S.last[ws]); });
+}
+
+// ---------- quiz ----------
+let Q = null;
+function allWorks(tab){ return D[tab].flatMap((c,ci) => c.works.map(w => ({...w, ci}))); }
+const named = w => !/^(Неизвест|Аноним|Египет|Визант|Римск|Строител|Архитектор|Английская)/.test(w.a);
+function autoQuestions(tab, works, pool, n){
+  const qs = [];
+  works = works.filter(w => named(w) || (tab==='lit' && w.q)); pool = pool.filter(named);
+  for (const w of pick(works, n)){
+    if (tab==='lit'){
+      if (w.q && Math.random()<.7){
+        const others = [...new Set(pool.filter(x=>x.t!==w.t).map(x=>x.t))];
+        qs.push({q:'Из какого произведения эти строки?', quote:w.q.replace(/\n\(перевод.*\)$/,''), o:shuffle([w.t, ...pick(others,3)]), ans:w.t, e:`«${w.t}» — ${w.a}, ${w.y}.`});
+      } else {
+        const others = [...new Set(pool.map(x=>surname(x.a)).filter(a=>a!==surname(w.a)))];
+        qs.push({q:`Кто написал «${w.t}»?`, o:shuffle([surname(w.a), ...pick(others,3)]), ans:surname(w.a), e:w.d});
+      }
+    } else {
+      const key = x => surname(x.a);
+      const others = [...new Set(pool.map(key).filter(a=>a!==key(w)))];
+      const q = tab==='art' ? 'Кто автор этого произведения?' : 'Кто автор этой музыки?';
+      qs.push({q, img: tab==='art'?w.img:null, audio: tab==='music'?w.audio:null, o:shuffle([key(w), ...pick(others,3)]), ans:key(w), e:`«${w.t}» — ${w.a}, ${w.y}. ${w.d}`});
+    }
+  }
+  return qs;
+}
+function eraQuestions(tab, n){
+  const chs = D[tab];
+  const works = allWorks(tab).filter(w => w.ci>0 && (tab!=='lit' || true));
+  return pick(works, n).map(w => {
+    const right = chs[w.ci].title;
+    const others = chs.filter((c,i)=>i>0 && i!==w.ci).map(c=>c.title);
+    const base = tab==='art' ? {img:w.img, q:'К какой эпохе или стилю относится это произведение?'}
+      : tab==='music' ? {audio:w.audio, q:'Послушайте. К какой эпохе относится эта музыка?'}
+      : (w.q ? {quote:w.q.replace(/\n\(перевод.*\)$/,''), q:'К какой эпохе относится произведение с этими строками?'} : {q:`«${w.t}» (${surname(w.a)}) — это какая эпоха?`});
+    return {...base, o:shuffle([right, ...pick(others,3)]), ans:right, e:`«${w.t}» — ${w.a}, ${w.y}. Глава «${right}».`};
+  });
+}
+function startQuiz(tab, idx){
+  let qs;
+  if (idx==null){
+    const pool = allWorks(tab);
+    qs = shuffle([...eraQuestions(tab, 6), ...autoQuestions(tab, pool, pool, 6)]);
+  } else {
+    const c = D[tab][idx];
+    const manual = c.quiz.map(x => ({q:x.q, o:shuffle(x.o), ans:x.o[x.a], e:x.e}));
+    qs = [...shuffle(manual), ...autoQuestions(tab, c.works, allWorks(tab), Math.min(3, c.works.length))];
+  }
+  Q = {tab, idx, qs, i:0, right:0, answered:false, id: idx==null ? 'exam-'+tab : D[tab][idx].id};
+  go({name:'quiz', tab});
+}
+function renderQuiz(){
+  const q = Q.qs[Q.i];
+  if (!q) return renderResult();
+  const title = Q.idx==null ? 'Экзамен на узнавание' : D[Q.tab][Q.idx].title;
+  app.innerHTML = `<div class="qwrap">
+    <button class="back" id="qExit">← Выйти</button>
+    <div class="qtop"><span>${esc(title)}</span><span>${Q.i+1} / ${Q.qs.length}</span></div>
+    <div class="bar"><i style="width:${Q.i/Q.qs.length*100}%"></i></div>
+    <div class="qtitle">${esc(q.q)}</div>
+    ${q.img?`<div class="qmedia"><img src="${esc(q.img.src)}" alt=""></div>`:''}
+    ${q.quote?`<div class="qquote">${esc(q.quote)}</div>`:''}
+    ${q.audio?`<div class="qaudio"><button class="play" id="qPlay">${ICON_PLAY}</button><div style="flex:1"><div>Включите отрывок</div><div class="seek" id="qSeek"><i></i></div></div></div>`:''}
+    <div class="opts">${q.o.map((o,i)=>`<button class="opt" data-o="${i}">${esc(o)}</button>`).join('')}</div>
+    <div id="qFeed"></div></div>`;
+  $('#qExit').onclick = () => Q.idx==null ? go({name:'tab', tab:Q.tab}) : go({name:'chapter', tab:Q.tab, idx:Q.idx});
+  if (q.audio){ const b=$('#qPlay'), s=$('#qSeek'); b.onclick = () => toggleAudio(q.audio, b, s); s.onclick = e => seekClick(e, s); }
+  app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const chosen = q.o[+b.dataset.o], ok = chosen===q.ans;
+    if (ok) Q.right++;
+    app.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (q.o[+x.dataset.o]===q.ans) x.classList.add('right'); });
+    if (!ok) b.classList.add('wrong');
+    $('#qFeed').innerHTML = `<div class="expl"><b>${ok?'Верно!':'Не совсем.'}</b> ${esc(q.e)}</div><p class="center"><button class="btn big" id="qNext">${Q.i+1<Q.qs.length?'Дальше →':'Результат'}</button></p>`;
+    $('#qNext').onclick = () => { stopAudio(); Q.i++; renderQuiz(); window.scrollTo(0,0); };
+    $('#qNext').scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+}
+function renderResult(){
+  const pct = Math.round(Q.right/Q.qs.length*100);
+  const prev = S.scores[Q.id];
+  if (prev==null || pct>prev){ S.scores[Q.id]=pct; save(); }
+  const msg = pct>=90 ? 'Блестяще!' : pct>=70 ? 'Отличный результат' : pct>=50 ? 'Хорошее начало' : 'Стоит перечитать главу';
+  const next = Q.idx!=null ? D[Q.tab][Q.idx+1] : null;
+  app.innerHTML = `<div class="result"><div class="orn">❦</div><div class="score">${pct}%</div><h2>${msg}</h2><p class="lead">Правильных ответов: ${Q.right} из ${Q.qs.length}${prev!=null?` · прошлый лучший: ${prev}%`:''}</p>
+    <p><button class="btn big" id="again">Пройти ещё раз</button></p>
+    ${next?`<p><button class="btn ghost" id="toNext">Следующая глава: ${esc(next.title)} →</button></p>`:''}
+    <p><button class="btn ghost" id="toTab">К оглавлению</button></p></div>`;
+  $('#again').onclick = () => startQuiz(Q.tab, Q.idx);
+  $('#toTab').onclick = () => go({name:'tab', tab:Q.tab});
+  if (next) $('#toNext').onclick = () => go({name:'chapter', tab:Q.tab, idx:Q.idx+1});
+}
+
+render();
+})();
+</script>
+</body>
+</html>
