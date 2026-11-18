@@ -5,6 +5,6 @@
 - `index.html` — всё приложение (без сборки).
 - `data.js` — контент с готовыми ссылками на Wikimedia Commons. Генерируется, руками не править.
 - `tools/content_art.py`, `content_music.py`, `content_lit.py` — тексты глав, произведения, вопросы. Править тут.
-- `tools/build.py` — проверяет файлы на Commons и страницы Викитеки и пересобирает `data.js` (`cd tools && python3 build.py`).
+- `tools/build.py` — проверяет файлы на Commons и страницы Викитеки и пересобирает `data.js`; затем `tools/localize.py` скачивает картины и музыку в `media/` (сжатие webp / mp3 96k) и подставляет локальные ссылки. Порядок: `cd tools && python3 build.py && python3 localize.py`.
 
 Картины и записи — Wikimedia Commons (свободные лицензии), книги — ru.wikisource.org (общественное достояние). Прогресс хранится в localStorage.
