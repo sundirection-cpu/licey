@@ -108,7 +108,7 @@ for key, src, fld in (('art',ART,'f'),('music',MUSIC,'f'),('lit',LIT,'img')):
         ex = EXTRA.get(ch['id'])
         if ex:
             for k in ('why', 'intro'):
-                if ex.get(k): ch[k] = ex[k]
+                if k in ex: ch[k] = ex[k]
             if ex.get('groups'):
                 ch['groups'] = [{'h': g['h'], 'p': g.get('p', ''), 'items': [dict({k: v for k, v in i.items() if k != 'f'}, img=media(i['f'])) for i in g['items'] if media(i.get('f'))]} for g in ex['groups']]
             if ex.get('figs'):

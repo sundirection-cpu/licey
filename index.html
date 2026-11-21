@@ -120,8 +120,8 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
 .fig figcaption{font-family:var(--head);font-style:italic;font-size:15.5px;color:var(--muted);margin-top:6px;text-align:center}
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
 .tcard{display:flex;flex-direction:column;text-align:left;border:0;background:none;padding:0}
-.tcard .tim{aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--parchment);display:flex;align-items:center;justify-content:center;padding:6px}
-.tcard .tim img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+.tcard .tim{aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--parchment)}
+.tcard .tim img{width:100%;height:100%;object-fit:cover}
 .tcard .tn{font-family:var(--head);font-weight:600;font-size:20px;line-height:1.1;margin-top:8px}
 .tcard .tt{font-size:14px;line-height:1.4;margin-top:2px}
 .grp{margin-top:26px}
@@ -398,7 +398,7 @@ function renderChapter(tab, idx){
     <h1 class="ch">${esc(c.title)}</h1>
     <div class="period">${esc(c.period)}</div>
     ${c.why?`<div class="why"><div class="caps">Зачем это знать</div>${c.why.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`:''}
-    <div class="prose">${c.intro.map((p,i)=>{ const f=c.figs&&c.figs[i]; return `<p>${esc(p)}</p>`+(!f?'':f.img2
+    <div class="prose" ${c.intro.length?'':'hidden'}>${c.intro.map((p,i)=>{ const f=c.figs&&c.figs[i]; return `<p>${esc(p)}</p>`+(!f?'':f.img2
       ? `<div class="pair"><figure class="fig" data-fig="${i}" data-n="1"><div class="fim"><img loading="lazy" src="${esc(f.img.src)}" alt="${esc(f.c1)}"></div><figcaption>${esc(f.c1)}</figcaption></figure><figure class="fig" data-fig="${i}" data-n="2"><div class="fim"><img loading="lazy" src="${esc(f.img2.src)}" alt="${esc(f.c2)}"></div><figcaption>${esc(f.c2)}</figcaption></figure></div>`
       : `<figure class="fig" data-fig="${i}"><img loading="lazy" src="${esc(f.img.src)}" alt="${esc(f.c)}"><figcaption>${esc(f.c)}</figcaption></figure>`); }).join('')}</div>
     ${c.groups ? c.groups.map((g,gi)=>`<div class="grp"><h3>${esc(g.h)}</h3>${g.p?`<p class="gp">${esc(g.p)}</p>`:''}<div class="tgrid">${g.items.map((t,ti)=>`<button class="tcard" data-g="${gi}" data-t="${ti}"><div class="tim"><img loading="lazy" src="${esc(t.img.src)}" alt="${esc(t.c)}"></div><div class="tn">${esc(t.t)}</div><div class="tt">${esc(t.d)}</div><div class="tc">${esc(t.c)}</div></button>`).join('')}</div></div>`).join('') : `<div class="sec">Как узнать</div>`}
@@ -417,7 +417,7 @@ function renderChapter(tab, idx){
   app.querySelectorAll('.main[data-w]').forEach(b => b.onclick = () => showArt(c.works[+b.dataset.w]));
   app.querySelectorAll('.tcard[data-t]').forEach(b => b.onclick = () => {
     const t = b.dataset.g!=null ? c.groups[+b.dataset.g].items[+b.dataset.t] : c.traits[+b.dataset.t];
-    showArt({t:t.t, a:t.c, y:'', d:t.d||'', img:t.img}); });
+    showArt({t:t.t, a:t.c, y:'', d:t.more?'':(t.d||''), story:t.more, img:t.img}); });
   app.querySelectorAll('.fig').forEach(b => b.onclick = () => { const f=c.figs[b.dataset.fig];
     if (b.dataset.n==='2') showArt({t:f.c2, a:'', y:'', d:'', img:f.img2}); else showArt({t:f.c1||f.c, a:'', y:'', d:'', img:f.img}); });
   app.querySelectorAll('.play').forEach(b => { const i=+b.dataset.w; const seek=app.querySelector(`.seek[data-s="${i}"]`); b.onclick = () => toggleAudio(c.works[i].audio, b, seek); seek.onclick = e => seekClick(e, seek); });
