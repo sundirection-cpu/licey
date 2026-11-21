@@ -109,6 +109,7 @@ for key, src, fld in (('art',ART,'f'),('music',MUSIC,'f'),('lit',LIT,'img')):
         if ex:
             for k in ('why', 'intro'):
                 if k in ex: ch[k] = ex[k]
+            if 'works' in ex and not ex['works']: ch['works'] = []; works = []
             if ex.get('groups'):
                 ch['groups'] = [{'h': g['h'], 'p': g.get('p', ''), 'items': [dict({k: v for k, v in i.items() if k != 'f'}, img=media(i['f'])) for i in g['items'] if media(i.get('f'))]} for g in ex['groups']]
             if ex.get('figs'):
@@ -122,6 +123,7 @@ for key, src, fld in (('art',ART,'f'),('music',MUSIC,'f'),('lit',LIT,'img')):
             for w in ch['works']:
                 st = ex.get('stories', {}).get(w['t'])
                 if st: w['story'] = st
+                elif ex.get('stories'): print('  нет рассказа:', ch['id'], w['t'])
         out[key].append(ch)
 
 with open(os.path.join(HERE, '..', 'data.js'), 'w') as f:

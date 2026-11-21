@@ -198,9 +198,9 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
 <div id="bg"></div>
 <button id="infoBtn" aria-label="О приложении"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg></button>
 <nav class="tabs" role="tablist">
-  <button role="tab" data-tab="art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 21V10a7 7 0 0 1 14 0v11z"/><path d="M5 17l4-4 3 3 2-2 5 5"/></svg>Искусство</button>
+  <button role="tab" data-tab="art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 21V10a7 7 0 0 1 14 0v11z"/><path d="M5 17l4-4 3 3 2-2 5 5"/></svg>Живопись</button>
   <button role="tab" data-tab="music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>Музыка</button>
-  <button role="tab" data-tab="lit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg>Книги</button>
+  <button role="tab" data-tab="lit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg>Литература</button>
 </nav>
 <main class="wrap" id="app"></main>
 
@@ -223,7 +223,7 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
 (() => {
 const D = window.LICEY_DATA;
 const TABS = {
-  art:{name:'Искусство',lead:'От пещерных быков до «Чёрного квадрата»: эпохи, стили и главные шедевры.'},
+  art:{name:'Изобразительное искусство',lead:'От пещерных рисунков до «Чёрного квадрата». Эпохи, стили и главные произведения.'},
   music:{name:'Музыка',lead:'От григорианского хорала до джаза: слушайте, сравнивайте, узнавайте на слух.'},
   lit:{name:'Литература',lead:'От Гомера до Серебряного века: эпохи, авторы — и сами книги, прямо здесь.'}
 };
@@ -358,8 +358,8 @@ function render(){
 
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>';
 const BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>';
-const TAG = {art:'Искусство', music:'Музыка', lit:'Литература'};
-const thumbOf = (tab, c) => { const w = c.works.find(w => w.img); return w && w.img ? w.img.src : null; };
+const TAG = {art:'Живопись', music:'Музыка', lit:'Литература'};
+const thumbOf = (tab, c) => { const w = c.works.find(w => w.img); if (w) return w.img.src; const g = c.groups && c.groups[0] && c.groups[0].items[0]; return g ? g.img.src : null; };
 
 function renderTab(tab){
   document.body.classList.add('on-tab');
@@ -368,7 +368,7 @@ function renderTab(tab){
   const done = chs.filter(c => S.scores[c.id]!=null).length;
   const ex = S.scores['exam-'+tab];
   app.innerHTML = `
-    <div class="brand"><img src="media/crest.png" alt="Герб Alcerdia"><div class="name">ALCERDIA</div><div class="tag">искусство · музыка · литература</div></div>
+    <div class="brand"><img src="media/crest.png" alt="Герб Alcerdia"><div class="name">ALCERDIA</div><div class="tag">изобразительное искусство · музыка · литература</div></div>
     <div class="tab-head"><h2>${TABS[tab].name}</h2><p>${TABS[tab].lead}</p></div>
     <div class="progress"><span>ПРОЙДЕНО</span><div class="bar"><i style="width:${done/chs.length*100}%"></i></div><span>${done} / ${chs.length}</span></div>
     <div class="cards">${chs.map((c,i)=>{
@@ -407,8 +407,8 @@ function renderChapter(tab, idx){
           ? `<button class="tcard" data-t="${i}"><div class="tim"><img loading="lazy" src="${esc(t.img.src)}" alt="${esc(t.c)}"></div><div class="tt">${esc(t.t)}</div><div class="tc">${esc(t.c)}</div></button>`
           : `<div class="tcard plain"><div class="tt">${esc(t)}</div></div>`).join('')}</div>`
       : `<ul class="traits">${c.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`}
-    <div class="sec">${tab==='art'?'Произведения':tab==='music'?'Слушаем':'Читаем'}</div>
-    <div class="rows">${rows}</div>
+    ${c.works.length?`<div class="sec">${tab==='art'?'Произведения':tab==='music'?'Слушаем':'Читаем'}</div>
+    <div class="rows">${rows}</div>`:''}
     <div class="quiz-call"><div class="caps">Викторина</div><h3>Проверьте себя</h3><p>${sc!=null?`Лучший результат: ${sc}%. Вопросы каждый раз перемешиваются, можно пройти ещё раз.`:'Ответьте на несколько вопросов, и знания закрепятся.'}</p><button class="btn big" id="quizBtn">Начать проверку</button></div>
     ${next?`<p class="center"><button class="btn ghost" id="nextBtn">Дальше: ${esc(next.title)} →</button></p>`:''}`;
   $('#backBtn').onclick = () => go({name:'tab', tab});
