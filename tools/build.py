@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from content_art import ART
 from content_music import MUSIC
 from content_lit import LIT
+from content_extra import EXTRA
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(HERE, 'cache.json')
@@ -66,6 +67,8 @@ def resolve_ws(titles):
         json.dump(cache, open(CACHE,'w'), ensure_ascii=False, indent=0)
 
 missing = []
+extra_files = [t['f'] for e in EXTRA.values() for t in e.get('traits', []) if isinstance(t, dict) and t.get('f')] + [x['f'] for e in EXTRA.values() for x in e.get('figs', {}).values()]
+resolve_files(extra_files)
 resolve_files([w['f'] for ch in ART for w in ch['works']])
 resolve_files([w.get('img') for ch in LIT for w in ch['works']])
 resolve_files([w['f'] for ch in MUSIC for w in ch['works']], audio=True)
@@ -96,6 +99,17 @@ for key, src, fld in (('art',ART,'f'),('music',MUSIC,'f'),('lit',LIT,'img')):
                 w['ws'] = ws
             works.append(w)
         ch['works'] = works
+        ex = EXTRA.get(ch['id'])
+        if ex:
+            if ex.get('why'): ch['why'] = ex['why']
+            if ex.get('traits'):
+                tr = []
+                for t in ex['traits']:
+                    m = media(t.get('f'))
+                    tr.append({'t': t['t'], 'c': t.get('c', ''), 'img': m} if m else t['t'])
+                ch['traits'] = tr
+            if ex.get('figs'):
+                ch['figs'] = {str(k): {'c': v.get('c', ''), 'img': media(v['f'])} for k, v in ex['figs'].items() if media(v['f'])}
         out[key].append(ch)
 
 with open(os.path.join(HERE, '..', 'data.js'), 'w') as f:

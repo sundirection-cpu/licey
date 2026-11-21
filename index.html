@@ -111,6 +111,21 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
 .btn{border:0;background:var(--bordeaux);color:var(--ivory);border-radius:999px;padding:11px 20px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px}
 .btn.ghost{background:var(--parchment);color:var(--bordeaux)}
 .btn.big{padding:15px 28px;font-size:15px}
+.why{margin:4px 0 22px;padding:18px 20px;border-radius:22px;background:var(--bordeaux);color:var(--ivory)}
+.why .caps{color:#e6cf9f;margin-bottom:6px}
+.why p{margin:0 0 8px;font-family:var(--head);font-size:20px;line-height:1.35}
+.why p:last-child{margin:0}
+.fig{margin:4px 0 20px;cursor:zoom-in}
+.fig img{width:100%;border-radius:20px;max-height:62vh;object-fit:cover}
+.fig figcaption{font-family:var(--head);font-style:italic;font-size:15.5px;color:var(--muted);margin-top:6px;text-align:center}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.tcard{display:flex;flex-direction:column;text-align:left;border:0;background:none;padding:0}
+.tcard .tim{aspect-ratio:4/5;border-radius:999px 999px 16px 16px;overflow:hidden;background:var(--parchment)}
+.tcard .tim img{width:100%;height:100%;object-fit:cover}
+.tcard .tt{font-size:14px;line-height:1.35;margin-top:8px;font-weight:500}
+.tcard .tc{font-family:var(--head);font-style:italic;font-size:14px;color:var(--muted);line-height:1.25;margin-top:2px}
+.tcard.plain{grid-column:1/-1;padding:10px 0;border-bottom:1px solid var(--line)}
+@media (min-width:600px){.tgrid{grid-template-columns:repeat(3,1fr)}}
 .quiz-call{margin:30px 0 12px;padding:24px 20px;border-radius:24px;background:var(--parchment);text-align:center}
 .quiz-call h3{font-family:var(--head);font-weight:600;font-size:28px;margin:4px 0}
 .quiz-call p{color:var(--muted);margin:0 0 16px;font-size:15px}
@@ -263,7 +278,7 @@ $('#resetBtn').onclick = () => { if (confirm('Стереть все резуль
 function showArt(w){
   $('#lbTitle').textContent = w.t;
   $('#lbImg').src = w.img.src; $('#lbImg').alt = w.t;
-  $('#lbText').innerHTML = `<h2>${esc(w.t)}</h2><div class="au">${esc(w.a)} · ${esc(w.y)}</div><p>${esc(w.d)}</p>${credit(w.img)}`;
+  $('#lbText').innerHTML = `<h2>${esc(w.t)}</h2><div class="au">${[w.a,w.y].filter(Boolean).map(esc).join(' · ')}</div>${w.d?`<p>${esc(w.d)}</p>`:''}${credit(w.img)}`;
   openOv($('#lightbox'));
 }
 
@@ -373,9 +388,14 @@ function renderChapter(tab, idx){
     <div class="bar-top"><button class="back" id="backBtn" aria-label="Назад">${BACK}</button><div class="caps">${TAG[tab]} · ${idx===0?'Азбука':'Глава '+ROMAN[idx]}</div></div>
     <h1 class="ch">${esc(c.title)}</h1>
     <div class="period">${esc(c.period)}</div>
-    <div class="prose">${c.intro.map(p=>`<p>${esc(p)}</p>`).join('')}</div>
+    ${c.why?`<div class="why"><div class="caps">Зачем это знать</div>${c.why.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`:''}
+    <div class="prose">${c.intro.map((p,i)=>{ const f=c.figs&&c.figs[i]; return `<p>${esc(p)}</p>`+(f?`<figure class="fig" data-fig="${i}"><img loading="lazy" src="${esc(f.img.src)}" alt="${esc(f.c)}"><figcaption>${esc(f.c)}</figcaption></figure>`:''); }).join('')}</div>
     <div class="sec">Как узнать</div>
-    <ul class="traits">${c.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+    ${c.traits.some(t=>typeof t==='object')
+      ? `<div class="tgrid">${c.traits.map((t,i)=>typeof t==='object'
+          ? `<button class="tcard" data-t="${i}"><div class="tim"><img loading="lazy" src="${esc(t.img.src)}" alt="${esc(t.c)}"></div><div class="tt">${esc(t.t)}</div><div class="tc">${esc(t.c)}</div></button>`
+          : `<div class="tcard plain"><div class="tt">${esc(t)}</div></div>`).join('')}</div>`
+      : `<ul class="traits">${c.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`}
     <div class="sec">${tab==='art'?'Произведения':tab==='music'?'Слушаем':'Читаем'}</div>
     <div class="rows">${rows}</div>
     <div class="quiz-call"><div class="caps">Викторина</div><h3>Проверьте себя</h3><p>${sc!=null?`Лучший результат: ${sc}%. Вопросы перемешиваются — можно пройти ещё раз.`:'Несколько вопросов по главе — и знания закрепятся.'}</p><button class="btn big" id="quizBtn">Начать проверку</button></div>
@@ -384,6 +404,8 @@ function renderChapter(tab, idx){
   $('#quizBtn').onclick = () => startQuiz(tab, idx);
   if (next) $('#nextBtn').onclick = () => go({name:'chapter', tab, idx:idx+1});
   app.querySelectorAll('.main[data-w]').forEach(b => b.onclick = () => showArt(c.works[+b.dataset.w]));
+  app.querySelectorAll('.tcard[data-t]').forEach(b => b.onclick = () => { const t=c.traits[+b.dataset.t]; showArt({t:t.t, a:t.c, y:'', d:'', img:t.img}); });
+  app.querySelectorAll('.fig').forEach(b => b.onclick = () => { const f=c.figs[b.dataset.fig]; showArt({t:f.c, a:'', y:'', d:'', img:f.img}); });
   app.querySelectorAll('.play').forEach(b => { const i=+b.dataset.w; const seek=app.querySelector(`.seek[data-s="${i}"]`); b.onclick = () => toggleAudio(c.works[i].audio, b, seek); seek.onclick = e => seekClick(e, seek); });
   app.querySelectorAll('[data-r]').forEach(b => b.onclick = () => openReader(c.works[+b.dataset.r].ws));
   app.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { const ws=c.works[+b.dataset.c].ws; openReader(ws, S.last[ws]); });

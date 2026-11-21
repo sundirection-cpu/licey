@@ -46,6 +46,11 @@ def audio(m):
         print('aud', name, os.path.getsize(path)//1024, 'KB')
     m['remote'] = m['src']; m['src'] = name; m.pop('alt', None)
 
+for key in ('art', 'music', 'lit'):
+    for ch in d[key]:
+        for t in ch.get('traits', []):
+            if isinstance(t, dict) and t.get('img'): image(t['img'], 1000, 80)
+        for f in ch.get('figs', {}).values(): image(f['img'], 1200, 80)
 for ch in d['art']:
     for w in ch['works']: image(w['img'], 1000, 80)
 for ch in d['lit']:
