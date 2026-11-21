@@ -67,7 +67,13 @@ def resolve_ws(titles):
         json.dump(cache, open(CACHE,'w'), ensure_ascii=False, indent=0)
 
 missing = []
-extra_files = [t['f'] for e in EXTRA.values() for t in e.get('traits', []) if isinstance(t, dict) and t.get('f')] + [x['f'] for e in EXTRA.values() for x in e.get('figs', {}).values()]
+def _ef(e):
+    out=[]
+    for g in e.get('groups', []): out += [i['f'] for i in g['items'] if i.get('f')]
+    out += [t['f'] for t in e.get('traits', []) if isinstance(t, dict) and t.get('f')]
+    for x in e.get('figs', {}).values(): out += [x[k] for k in ('f','f2') if x.get(k)]
+    return out
+extra_files = [f for e in EXTRA.values() for f in _ef(e)]
 resolve_files(extra_files)
 resolve_files([w['f'] for ch in ART for w in ch['works']])
 resolve_files([w.get('img') for ch in LIT for w in ch['works']])
@@ -101,15 +107,21 @@ for key, src, fld in (('art',ART,'f'),('music',MUSIC,'f'),('lit',LIT,'img')):
         ch['works'] = works
         ex = EXTRA.get(ch['id'])
         if ex:
-            if ex.get('why'): ch['why'] = ex['why']
-            if ex.get('traits'):
-                tr = []
-                for t in ex['traits']:
-                    m = media(t.get('f'))
-                    tr.append({'t': t['t'], 'c': t.get('c', ''), 'img': m} if m else t['t'])
-                ch['traits'] = tr
+            for k in ('why', 'intro'):
+                if ex.get(k): ch[k] = ex[k]
+            if ex.get('groups'):
+                ch['groups'] = [{'h': g['h'], 'p': g.get('p', ''), 'items': [dict({k: v for k, v in i.items() if k != 'f'}, img=media(i['f'])) for i in g['items'] if media(i.get('f'))]} for g in ex['groups']]
             if ex.get('figs'):
-                ch['figs'] = {str(k): {'c': v.get('c', ''), 'img': media(v['f'])} for k, v in ex['figs'].items() if media(v['f'])}
+                ch['figs'] = {}
+                for k, v in ex['figs'].items():
+                    m = media(v['f'])
+                    if not m: continue
+                    fg = {'c': v.get('c', ''), 'img': m}
+                    if v.get('f2') and media(v['f2']): fg.update(img2=media(v['f2']), c1=v.get('c1', ''), c2=v.get('c2', ''))
+                    ch['figs'][str(k)] = fg
+            for w in ch['works']:
+                st = ex.get('stories', {}).get(w['t'])
+                if st: w['story'] = st
         out[key].append(ch)
 
 with open(os.path.join(HERE, '..', 'data.js'), 'w') as f:

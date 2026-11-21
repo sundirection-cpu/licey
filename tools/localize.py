@@ -48,9 +48,11 @@ def audio(m):
 
 for key in ('art', 'music', 'lit'):
     for ch in d[key]:
-        for t in ch.get('traits', []):
-            if isinstance(t, dict) and t.get('img'): image(t['img'], 1000, 80)
-        for f in ch.get('figs', {}).values(): image(f['img'], 1200, 80)
+        for g in ch.get('groups', []):
+            for it in g['items']: image(it['img'], 1000, 80)
+        for f in ch.get('figs', {}).values():
+            image(f['img'], 1200, 80)
+            if f.get('img2'): image(f['img2'], 1200, 80)
 for ch in d['art']:
     for w in ch['works']: image(w['img'], 1000, 80)
 for ch in d['lit']:
