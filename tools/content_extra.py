@@ -262,3 +262,7 @@ EXTRA = {'a0': {'intro': [],
 from content_extra_art import ART2
 EXTRA.update(ART2)
 EXTRA['a0']['works'] = []
+from content_extra_music import MUS2
+EXTRA.update(MUS2)
+from content_extra_lit import LIT2
+EXTRA.update(LIT2)

@@ -135,6 +135,11 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
 .tcard .tc{font-family:var(--head);font-style:italic;font-size:14px;color:var(--muted);line-height:1.25;margin-top:2px}
 .tcard.plain{grid-column:1/-1;padding:10px 0;border-bottom:1px solid var(--line)}
 @media (min-width:600px){.tgrid{grid-template-columns:repeat(3,1fr)}}
+.story{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+.story summary{cursor:pointer;color:var(--bordeaux);font-weight:600;font-size:14px;list-style:none;padding:4px 0}
+.story summary::before{content:"＋ "}
+.story[open] summary::before{content:"− "}
+.story p{font-size:15.5px}
 .quiz-call{margin:30px 0 12px;padding:24px 20px;border-radius:24px;background:var(--parchment);text-align:center}
 .quiz-call h3{font-family:var(--head);font-weight:600;font-size:28px;margin:4px 0}
 .quiz-call p{color:var(--muted);margin:0 0 16px;font-size:15px}
@@ -224,8 +229,8 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
 const D = window.LICEY_DATA;
 const TABS = {
   art:{name:'Изобразительное искусство',lead:'От пещерных рисунков до «Чёрного квадрата». Эпохи, стили и главные произведения.'},
-  music:{name:'Музыка',lead:'От григорианского хорала до джаза: слушайте, сравнивайте, узнавайте на слух.'},
-  lit:{name:'Литература',lead:'От Гомера до Серебряного века: эпохи, авторы — и сами книги, прямо здесь.'}
+  music:{name:'Музыка',lead:'От григорианского хорала до джаза. Слушайте, сравнивайте, узнавайте на слух.'},
+  lit:{name:'Литература',lead:'От Гомера до Серебряного века. Эпохи, авторы и сами книги, которые можно читать прямо здесь.'}
 };
 const ROMAN = ['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 const $ = (s, r=document) => r.querySelector(s);
@@ -372,7 +377,7 @@ function renderTab(tab){
     <div class="tab-head"><h2>${TABS[tab].name}</h2><p>${TABS[tab].lead}</p></div>
     <div class="progress"><span>ПРОЙДЕНО</span><div class="bar"><i style="width:${done/chs.length*100}%"></i></div><span>${done} / ${chs.length}</span></div>
     <div class="cards">${chs.map((c,i)=>{
-      const sc = S.scores[c.id], th = tab!=='music' ? thumbOf(tab,c) : null;
+      const sc = S.scores[c.id], th = thumbOf(tab,c);
       return `<button class="card" data-i="${i}">${th?`<img class="th" loading="lazy" src="${esc(th)}" alt="">`:`<div class="medal">${i===0?'◆':ROMAN[i]}</div>`}<div><div class="num">${i===0?'АЗБУКА':ROMAN[i]}</div><div class="t">${esc(c.title)}</div><div class="d">${esc(c.period)}</div></div><div class="end">${sc!=null?`<span class="sc">${sc}%</span>`:''}<span class="arrow">${ARROW}</span></div></button>`;
     }).join('')}
       <button class="card exam" id="examBtn"><div><div class="num">ФИНАЛ · ВСЕ ГЛАВЫ</div><div class="t">Экзамен на узнавание</div><div class="d">${tab==='lit'?'Угадайте книгу по цитате':tab==='music'?'Угадайте эпоху и композитора на слух':'Угадайте эпоху и автора по картине'}${ex!=null?` · лучший ${ex}%`:''}</div></div><div class="end"><span class="arrow">${ARROW}</span></div></button>
@@ -388,9 +393,9 @@ function renderChapter(tab, idx){
   if (tab==='art'){
     rows = c.works.map((w,i)=>`<div class="row"><button class="main" data-w="${i}"><div class="arch"><img loading="lazy" src="${esc(w.img.src)}" alt="${esc(w.t)}"></div><div><div class="t">${esc(w.t)}</div><div class="d">${esc(w.a)} · ${esc(w.y)}</div></div><span class="ring">${ARROW}</span></button></div>`).join('');
   } else if (tab==='music'){
-    rows = c.works.map((w,i)=>`<div class="row"><div class="main"><div class="arch">♪</div><div><div class="t">${esc(w.t)}</div><div class="d">${esc(w.a)} · ${esc(w.y)}</div></div><button class="play" data-w="${i}" aria-label="Слушать">${ICON_PLAY}</button></div>${seekRow(i)}<div class="more">${esc(w.d)}${credit(w.audio)}</div></div>`).join('');
+    rows = c.works.map((w,i)=>`<div class="row"><div class="main"><div class="arch">♪</div><div><div class="t">${esc(w.t)}</div><div class="d">${esc(w.a)} · ${esc(w.y)}</div></div><button class="play" data-w="${i}" aria-label="Слушать">${ICON_PLAY}</button></div>${seekRow(i)}<div class="more">${esc(w.d)}${w.story?`<details class="story"><summary>История и что слушать</summary>${w.story.map(p=>`<p>${esc(p)}</p>`).join('')}</details>`:''}${credit(w.audio)}</div></div>`).join('');
   } else {
-    rows = c.works.map((w,i)=>`<div class="row"><div class="main"><div class="arch">${w.img?`<img loading="lazy" src="${esc(w.img.src)}" alt="${esc(w.a)}">`:esc(w.a.trim()[0])}</div><div><div class="t">${esc(w.t)}</div><div class="d">${esc(w.a)} · ${esc(w.y)}</div></div></div><div class="more">${w.q?`<blockquote>${esc(w.q)}</blockquote>`:''}<p>${esc(w.d)}</p>${w.ws?`<div class="acts"><button class="btn" data-r="${i}">Читать</button>${S.last&&S.last[w.ws]?`<button class="btn ghost" data-c="${i}">Продолжить</button>`:''}</div>`:''}</div></div>`).join('');
+    rows = c.works.map((w,i)=>`<div class="row"><div class="main"><div class="arch">${w.img?`<img loading="lazy" src="${esc(w.img.src)}" alt="${esc(w.a)}">`:esc(w.a.trim()[0])}</div><div><div class="t">${esc(w.t)}</div><div class="d">${esc(w.a)} · ${esc(w.y)}</div></div></div><div class="more">${w.q?`<blockquote>${esc(w.q)}</blockquote>`:''}<p>${esc(w.d)}</p>${w.story?`<details class="story"><summary>О книге</summary>${w.story.map(p=>`<p>${esc(p)}</p>`).join('')}</details>`:''}${w.ws?`<div class="acts"><button class="btn" data-r="${i}">Читать</button>${S.last&&S.last[w.ws]?`<button class="btn ghost" data-c="${i}">Продолжить</button>`:''}</div>`:''}</div></div>`).join('');
   }
   const sc = S.scores[c.id], next = D[tab][idx+1];
   app.innerHTML = `
