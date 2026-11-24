@@ -272,3 +272,10 @@ for _k, _v in EXTRA.items():
     if _k.startswith('a'):
         for _t in list(_v.get('stories', {})):
             if _t in _ST: _v['stories'][_t] = _ST[_t]
+# Рассказы «Музыки» и «Литературы» v2.0 (2026-11-24).
+from stories_music import STORIES as _SM
+from stories_lit import STORIES as _SL
+for _src in (_SM, _SL):
+    for _k, _d in _src.items():
+        for _t, _ps in _d.items():
+            if _t in EXTRA[_k].get('stories', {}): EXTRA[_k]['stories'][_t] = _ps
