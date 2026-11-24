@@ -266,3 +266,9 @@ from content_extra_music import MUS2
 EXTRA.update(MUS2)
 from content_extra_lit import LIT2
 EXTRA.update(LIT2)
+# Рассказы о произведениях «Изобразительного искусства» v2.0 (2026-11-24): больше контекста, термины объяснены.
+from stories_art import STORIES as _ST
+for _k, _v in EXTRA.items():
+    if _k.startswith('a'):
+        for _t in list(_v.get('stories', {})):
+            if _t in _ST: _v['stories'][_t] = _ST[_t]
