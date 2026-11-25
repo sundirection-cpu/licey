@@ -218,7 +218,10 @@ h1.ch{font-family:var(--head);font-weight:600;font-size:36px;line-height:1.04;ma
   <p>Картины и записи взяты из <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>, тексты — из <a href="https://ru.wikisource.org" target="_blank" rel="noopener">Викитеки</a>. Под каждым произведением указаны лицензия и ссылка на источник.</p>
   <h2>Про авторское право</h2>
   <p>В России, Бразилии и большинстве стран Европы права действуют всю жизнь автора и ещё <b>70 лет</b> после его смерти (а не 40). Поэтому античность, Шекспир, Пушкин, Толстой, Чехов и Блок — общественное достояние. Важная деталь: у перевода свой автор, и перевод тоже охраняется 70 лет после смерти переводчика. Поэтому здесь используются старые переводы (Гнедич, Жуковский, Кронеберг и другие). Ахматова, Пастернак, Булгаков, Пикассо и Дали пока под охраной.</p>
-  <p class="credit">Прогресс хранится только на этом устройстве.</p>
+  <h2>Как не потерять прогресс</h2>
+  <p>Прогресс хранится в браузере на этом телефоне. Перед переустановкой или сменой телефона нажмите «Сохранить прогресс»: в папку «Загрузки» ляжет файл. Потом откройте приложение заново и нажмите «Восстановить» и выберите этот файл.</p>
+  <p style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" id="exportBtn">Сохранить прогресс</button><button class="btn ghost" id="importBtn">Восстановить</button><input type="file" id="importFile" accept=".json,application/json" hidden></p>
+  <p class="credit" id="progMsg"></p>
   <p><button class="btn ghost" id="resetBtn">Сбросить прогресс</button></p>
 </div></div>
 <audio id="player" preload="auto"></audio>
@@ -287,6 +290,31 @@ function openOv(el){ el.classList.add('open'); el.scrollTop=0; document.body.sty
 function closeOv(el, fromPop){ if (!el.classList.contains('open')) return; el.classList.remove('open'); document.body.style.overflow=''; if (!fromPop) history.back(); if (el.id==='readerOv' && view.name==='chapter'){ const y=scrollY; render(); scrollTo(0,y); } }
 window.addEventListener('popstate', () => { document.querySelectorAll('.ov.open').forEach(o => closeOv(o, true)); });
 $('#infoBtn').onclick = () => openOv($('#aboutOv'));
+$('#exportBtn').onclick = () => {
+  const d = new Date(), stamp = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const blob = new Blob([JSON.stringify({app:'alcerdia', saved:d.toISOString(), data:S})], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'alcerdia-progress-'+stamp+'.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  $('#progMsg').textContent = 'Файл сохранён в «Загрузки»: alcerdia-progress-'+stamp+'.json';
+};
+$('#importBtn').onclick = () => $('#importFile').click();
+$('#importFile').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const j = JSON.parse(r.result), d = j.data || j;
+      if (!d || typeof d.scores !== 'object') throw 0;
+      for (const [k,v] of Object.entries(d.scores)) if (S.scores[k]==null || v > S.scores[k]) S.scores[k] = v;
+      S.last = Object.assign({}, d.last||{}, S.last||{});
+      if (d.rfs) S.rfs = d.rfs; if (d.theme) S.theme = d.theme;
+      save(); setRfs(); render();
+      $('#progMsg').textContent = 'Прогресс восстановлен. Результатов в файле: '+Object.keys(d.scores).length+'.';
+    } catch(err) { $('#progMsg').textContent = 'Это не файл прогресса Alcerdia.'; }
+    e.target.value = '';
+  };
+  r.readAsText(f);
+};
 $('#resetBtn').onclick = () => { if (confirm('Стереть все результаты проверок?')) { S.scores={}; save(); closeOv($('#aboutOv')); render(); } };
 
 function showArt(w){
